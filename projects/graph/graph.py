@@ -108,6 +108,18 @@ class Graph:
         for neighbor in self.get_neighbors(starting_vertex) - visited_verts:
             self.dft_recursive(neighbor, visited_verts)
 
+        '''
+        CLASS SOLUTION: 
+
+        if visited is None:
+            visited = set()
+        visited.add(starting_vertex)
+
+        for v in self.get_neighbors(starting_vertex):
+            if v not in visited:
+                self.dft_recursive(v, visited)
+        '''
+
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
@@ -150,6 +162,29 @@ class Graph:
                     # if neighbor is destination, return new path
                     if neighbor == destination_vertex:
                         return new_path
+
+        '''
+        CLASS SOLUTION:
+        q = Queue()
+        q.enqueue([starting_vertex_id])
+        visited = set()
+
+        while q.size() > 0:
+            path = q.dequeue()
+            v = path[-1]
+
+            if v not in visited:
+                if v == target_vertex_id:
+                    return path
+                visited.add(v)
+
+                for next_v in self.get_neighbors(v):
+                    path_copy = list(path) # or [path]...need copy of path not a reference
+                    path_copy.append(next_v)
+                    q.enqueue(path_copy)
+
+        return None
+        '''
 
 
 
