@@ -1,3 +1,5 @@
+import random
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -30,11 +32,9 @@ class SocialGraph:
 
     def populate_graph(self, num_users, avg_friendships):
         """
-        Takes a number of users and an average number of friendships
-        as arguments
+        Takes a number of users and an average number of friendships as arguments
 
-        Creates that number of users and a randomly distributed friendships
-        between those users.
+        Creates that number of users and a randomly distributed friendships between those users.
 
         The number of users must be greater than the average number of friendships.
         """
@@ -45,8 +45,30 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(0, num_users):
+            self.add_user(f"User {i}")
 
         # Create friendships
+        # Generate all possible friendship combos...store in list
+        possible_friendships = []
+
+        # Avoid duplicates by ensuring num1 < num2
+        # Iterate thru users
+        for user_id in self.users:
+            # Iterate thru range of next user (id+1) thru last
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+
+        # Shuffle possible friendships
+        random.shuffle(possible_friendships)
+
+        # Create friendships from the first N pairs of the list
+        # N will be num_users * avg_friendships // 2 (floor division so we don't get float)
+        N = num_users * avg_friendships // 2
+        for i in range(N): 
+            friendship = possible_friendships[i]
+            user_id, friend_id = friendship
+            self.add_friendship(user_id, friend_id)
 
     def get_all_social_paths(self, user_id):
         """
@@ -66,5 +88,5 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.friendships)
-    connections = sg.get_all_social_paths(1)
-    print(connections)
+    # connections = sg.get_all_social_paths(1)
+    # print(connections)
